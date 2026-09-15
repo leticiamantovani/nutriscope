@@ -1,0 +1,53 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background font-sans text-body text-foreground;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display font-semibold text-foreground;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-4 ring-ring/25;
+  }
+
+  ::selection {
+    @apply bg-primary-soft text-foreground;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility text-pretty {
+  text-wrap: pretty;
+}
