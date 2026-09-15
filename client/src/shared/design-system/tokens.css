@@ -1,152 +1,160 @@
 /*
- * NutriLens — Design Tokens
- * -------------------------------------------------------------
- * Fonte única de verdade para cor, tipografia, radius, sombra e
- * animação. Nenhum componente deve usar hex/fonte fora daqui.
- *
- * Tailwind v4 lê este bloco @theme e gera as utilities:
- *   --color-primary   -> bg-primary / text-primary / border-primary
- *   --font-display    -> font-display
- *   --text-title      -> text-title
- *   --radius-lg       -> rounded-lg
- *   --shadow-soft     -> shadow-soft
+ * NutriLens design tokens.
+ * Single source of truth for color, type scale, radius and motion.
+ * Components must consume these through Tailwind utilities
+ * (bg-primary, text-verdict-avoid, font-heading, text-display…) —
+ * never hardcode hex/oklch or font names elsewhere.
  */
-@theme {
-  /* ---------- Paleta base (escala) ---------- */
-  --color-cream-50: #fffdfa;
-  --color-cream-100: #fffbf6;
-  --color-cream-200: #fbf3e8;
-  --color-cream-300: #f3e6d6;
 
-  --color-cocoa-400: #a08c7e;
-  --color-cocoa-500: #7a6a5e;
-  --color-cocoa-700: #4a3a30;
-  --color-cocoa-900: #2a1f17;
+:root {
+  color-scheme: light;
 
-  --color-orange-50: #fff4ea;
-  --color-orange-100: #ffe8d6;
-  --color-orange-200: #ffd0ad;
-  --color-orange-500: #f4731f;
-  --color-orange-600: #dd5f10;
-  --color-orange-700: #b84c0a;
+  /* ---- Brand palette (warm + fresh accent) ---------------------------- */
+  --brand-orange: oklch(0.74 0.16 58);
+  --brand-orange-strong: oklch(0.56 0.17 46);
+  --brand-coral: oklch(0.74 0.15 30);
+  --brand-mustard: oklch(0.86 0.13 92);
+  --brand-green: oklch(0.80 0.15 135);
+  --brand-green-strong: oklch(0.52 0.13 148);
+  --brand-cream: oklch(0.985 0.01 85);
+  --brand-sand: oklch(0.955 0.02 80);
+  --brand-cocoa: oklch(0.27 0.03 50);
+  --brand-cocoa-soft: oklch(0.47 0.03 55);
 
-  --color-coral-100: #ffe3de;
-  --color-coral-500: #ff6b57;
-  --color-coral-700: #c7402f;
+  /* ---- Semantic surface/ink tokens (shadcn contract) ------------------ */
+  --background: var(--brand-cream);
+  --foreground: var(--brand-cocoa);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--brand-cocoa);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--brand-cocoa);
+  --primary: var(--brand-orange-strong);
+  --primary-foreground: oklch(0.995 0.005 85);
+  --secondary: var(--brand-sand);
+  --secondary-foreground: var(--brand-cocoa);
+  --muted: oklch(0.95 0.015 80);
+  --muted-foreground: var(--brand-cocoa-soft);
+  --accent: oklch(0.95 0.05 92);
+  --accent-foreground: var(--brand-cocoa);
+  --destructive: oklch(0.55 0.19 27);
+  --border: oklch(0.90 0.02 75);
+  --input: oklch(0.87 0.025 75);
+  --ring: var(--brand-orange);
 
-  --color-mustard-100: #fbf0c7;
-  --color-mustard-500: #e9b824;
-  --color-mustard-700: #8f6b0c;
+  /* ---- Verdict colors — RESERVED ------------------------------------
+   * Used exclusively by the ingredient verdict system (chips, legend,
+   * summary). Never reuse for buttons, links or decoration, so the
+   * meaning of each color stays unambiguous.
+   * Ink tokens (text/icon) are ≥ 4.5:1 on their -soft background.
+   */
+  --verdict-ok: oklch(0.44 0.11 155);
+  --verdict-ok-soft: oklch(0.95 0.04 155);
+  --verdict-ok-border: oklch(0.80 0.09 155);
 
-  --color-leaf-100: #ddf3e0;
-  --color-leaf-500: #3fa34d;
-  --color-leaf-700: #23703a;
+  --verdict-caution: oklch(0.50 0.12 72);
+  --verdict-caution-soft: oklch(0.965 0.06 92);
+  --verdict-caution-border: oklch(0.82 0.11 88);
 
-  --color-red-100: #fde2e2;
-  --color-red-600: #c93c3c;
+  --verdict-avoid: oklch(0.49 0.18 28);
+  --verdict-avoid-soft: oklch(0.955 0.035 28);
+  --verdict-avoid-border: oklch(0.70 0.16 28);
 
-  /* ---------- Tokens semânticos ---------- */
-  --color-background: var(--color-cream-100);
-  --color-foreground: var(--color-cocoa-900);
+  --verdict-danger: oklch(0.38 0.16 8);
+  --verdict-danger-soft: oklch(0.94 0.04 8);
+  --verdict-danger-border: oklch(0.52 0.18 8);
+  --verdict-danger-foreground: oklch(0.99 0.005 8);
 
-  --color-card: var(--color-cream-50);
-  --color-card-foreground: var(--color-cocoa-900);
+  /* ---- Shape & motion ------------------------------------------------- */
+  --radius: 1rem;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-base: 260ms;
+}
 
-  --color-muted: var(--color-cream-200);
-  --color-muted-foreground: var(--color-cocoa-500);
+@theme inline {
+  /* Surfaces & ink */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 
-  --color-primary: var(--color-orange-500);
-  --color-primary-hover: var(--color-orange-600);
-  --color-primary-foreground: var(--color-cream-50);
-  --color-primary-soft: var(--color-orange-100);
+  /* Brand (decorative use: illustration, gradients, marks) */
+  --color-brand-orange: var(--brand-orange);
+  --color-brand-orange-strong: var(--brand-orange-strong);
+  --color-brand-coral: var(--brand-coral);
+  --color-brand-mustard: var(--brand-mustard);
+  --color-brand-green: var(--brand-green);
+  --color-brand-green-strong: var(--brand-green-strong);
+  --color-brand-sand: var(--brand-sand);
+  --color-brand-cocoa: var(--brand-cocoa);
 
-  --color-accent: var(--color-leaf-500);
-  --color-accent-foreground: var(--color-leaf-700);
-  --color-accent-soft: var(--color-leaf-100);
+  /* Verdict (reserved) */
+  --color-verdict-ok: var(--verdict-ok);
+  --color-verdict-ok-soft: var(--verdict-ok-soft);
+  --color-verdict-ok-border: var(--verdict-ok-border);
+  --color-verdict-caution: var(--verdict-caution);
+  --color-verdict-caution-soft: var(--verdict-caution-soft);
+  --color-verdict-caution-border: var(--verdict-caution-border);
+  --color-verdict-avoid: var(--verdict-avoid);
+  --color-verdict-avoid-soft: var(--verdict-avoid-soft);
+  --color-verdict-avoid-border: var(--verdict-avoid-border);
+  --color-verdict-danger: var(--verdict-danger);
+  --color-verdict-danger-soft: var(--verdict-danger-soft);
+  --color-verdict-danger-border: var(--verdict-danger-border);
+  --color-verdict-danger-foreground: var(--verdict-danger-foreground);
 
-  --color-destructive: var(--color-red-600);
-  --color-destructive-soft: var(--color-red-100);
+  /* Typography — two families, four sizes */
+  --font-heading: var(--font-nunito), ui-rounded, system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
 
-  --color-border: var(--color-cream-300);
-  --color-input: var(--color-cream-300);
-  --color-ring: var(--color-orange-500);
-
-  /* Macros — cada métrica tem cor de destaque, texto legível (AA) e fundo suave */
-  --color-macro-calories: var(--color-mustard-500);
-  --color-macro-calories-foreground: var(--color-mustard-700);
-  --color-macro-calories-soft: var(--color-mustard-100);
-
-  --color-macro-protein: var(--color-coral-500);
-  --color-macro-protein-foreground: var(--color-coral-700);
-  --color-macro-protein-soft: var(--color-coral-100);
-
-  --color-macro-carbs: var(--color-leaf-500);
-  --color-macro-carbs-foreground: var(--color-leaf-700);
-  --color-macro-carbs-soft: var(--color-leaf-100);
-
-  /* ---------- Tipografia ---------- */
-  --font-display: 'Fredoka', 'Nunito', ui-rounded, system-ui, sans-serif;
-  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-
-  /* Hierarquia com exatamente 4 tamanhos. A escala padrão do Tailwind
-     (text-xs, text-sm, ...) é removida para impedir tamanhos fora do sistema. */
-  --text-*: initial;
-  --text-display: clamp(2rem, 4vw + 0.75rem, 3.25rem);
+  --text-display: clamp(2.25rem, 1.4rem + 3.6vw, 3.5rem);
   --text-display--line-height: 1.05;
-  --text-display--letter-spacing: -0.01em;
-  --text-title: 1.375rem;
-  --text-title--line-height: 1.25;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 800;
+
+  --text-heading: clamp(1.375rem, 1.1rem + 1.1vw, 1.875rem);
+  --text-heading--line-height: 1.15;
+  --text-heading--letter-spacing: -0.01em;
+  --text-heading--font-weight: 700;
+
   --text-body: 1rem;
   --text-body--line-height: 1.6;
-  --text-caption: 0.8125rem;
-  --text-caption--line-height: 1.45;
 
-  /* ---------- Radius ---------- */
-  --radius-*: initial;
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
-  --radius-full: 9999px;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
 
-  /* ---------- Sombras ---------- */
-  --shadow-*: initial;
-  --shadow-soft: 0 1px 2px rgb(42 31 23 / 0.04), 0 10px 30px -12px rgb(42 31 23 / 0.14);
-  --shadow-lift: 0 2px 4px rgb(42 31 23 / 0.04), 0 18px 40px -16px rgb(244 115 31 / 0.35);
-  --shadow-focus: 0 0 0 4px rgb(244 115 31 / 0.22);
+  /* Collapse Tailwind's default small sizes onto the "small" step so
+   * shadcn primitives (text-sm / text-xs) stay within the 4-size scale. */
+  --text-sm: var(--text-small);
+  --text-sm--line-height: var(--text-small--line-height);
+  --text-xs: var(--text-small);
+  --text-xs--line-height: var(--text-small--line-height);
+  --text-base: var(--text-body);
+  --text-base--line-height: var(--text-body--line-height);
 
-  /* ---------- Animações ---------- */
-  --animate-caret: caret 1s steps(1, end) infinite;
-  --animate-float: float 7s ease-in-out infinite;
-  --animate-pulse-dot: pulse-dot 1.4s ease-in-out infinite;
+  /* Radius scale derived from --radius */
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.5);
+  --radius-2xl: calc(var(--radius) * 2);
+  --radius-3xl: calc(var(--radius) * 2.5);
+  --radius-4xl: calc(var(--radius) * 3);
 
-  @keyframes caret {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0;
-    }
-  }
-  @keyframes float {
-    0%,
-    100% {
-      transform: translateY(0) rotate(0deg);
-    }
-    50% {
-      transform: translateY(-10px) rotate(2deg);
-    }
-  }
-  @keyframes pulse-dot {
-    0%,
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: scale(0.6);
-      opacity: 0.5;
-    }
-  }
+  /* Motion */
+  --ease-soft: var(--ease-out-soft);
 }

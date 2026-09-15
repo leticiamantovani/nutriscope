@@ -1,125 +1,119 @@
-# NutriLens — Frontend
+# NutriLens — frontend
 
-Assistente de nutrição com IA. O usuário descreve um prato (ou lista ingredientes) e recebe,
-em streaming, calorias, proteínas e carboidratos estimados com uma explicação curta.
+Interface do NutriLens: o usuário digita o nome de um produto industrializado e recebe, em streaming, a lista de ingredientes classificada em quatro vereditos (**adequado · moderado · evitar · cancerígeno**) mais uma explicação gerada por IA.
 
-Este diretório contém **apenas o frontend**. O backend será integrado depois; até lá o app
-roda de forma independente com um mock local que simula a cadência de um SSE real.
+Este frontend roda **sem backend**: a camada de dados usa um client mockado que simula a cadência de um SSE. A troca pela API real é uma mudança de uma linha (ver [Ponto de troca do mock](#ponto-de-troca-do-mock)).
 
 ## Rodando
 
 ```bash
-cd front
 npm install
-npm run dev        # http://localhost:5173
+npm run dev        # http://localhost:3000
+npm run build      # build de produção
+npm run lint       # eslint
 ```
 
-Outros scripts: `npm run build` (typecheck + bundle), `npm run preview`, `npm run lint`.
+Requer Node 20+.
+
+### Testando todos os estados com o mock
+
+O mock ignora o que foi digitado e sempre devolve o mesmo produto de exemplo. Para exercitar os outros estados, adicione `?mock=` à URL:
+
+| URL                          | Estado                                                     |
+| ---------------------------- | ---------------------------------------------------------- |
+| `/?q=miojo`                  | Caminho feliz (lendo → classificando → explicando → pronto) |
+| `/?q=miojo&mock=not-found`   | Produto não encontrado                                     |
+| `/?q=miojo&mock=error`       | Falha de rede antes de qualquer dado                       |
+| `/?q=miojo&mock=interrupted` | Stream cai no meio: mostra resultado parcial + refazer     |
+
+O estado vazio é a própria landing; enviar o formulário sem texto mostra a validação inline.
 
 ## Stack
 
-- React 19 + TypeScript + Vite
-- Tailwind CSS v4 + primitivos no estilo shadcn/ui (`src/shared/components/ui`)
-- Framer Motion (transições, count-up dos macros, cursor de digitação)
-- TanStack Query v5 com `experimental_streamedQuery` para orquestrar o stream
-- Lucide (ícones outline)
+- **Next.js 16 (App Router)** + TypeScript
+- **Tailwind CSS v4** + **shadcn/ui** (componentes em `src/shared/components/ui`)
+- **Framer Motion** para microinterações (respeita `prefers-reduced-motion`)
+- **TanStack Query** (`experimental_streamedQuery`) para orquestrar o streaming e cachear resultados por consulta
+- Ícones **Lucide**
 
 ## Estrutura
 
 ```
 src/
-├── app/                      # bootstrap: App + providers (QueryClient)
+├── app/                      # Next.js: layout raiz, providers, rotas
+│   ├── (routes)/page.tsx     # única rota do MVP (landing + resultado)
+│   ├── (routes)/error.tsx    # error boundary da rota
+│   ├── not-found.tsx
+│   ├── providers.tsx         # QueryClient, MotionConfig, TooltipProvider
+│   └── globals.css           # importa Tailwind + tokens
 ├── features/
-│   ├── analyze/              # fluxo input -> resultado em streaming
-│   │   ├── components/       # AnalyzeForm, ResultPanel, MacroCards, StreamingText, ...
-│   │   └── hooks/useAnalyze.ts
-│   └── landing/              # Header, Hero, HowItWorks, Roadmap, Footer
+│   ├── analyze/              # fluxo input → streaming → resultado
+│   │   ├── api/              # ← camada de dados (mock / http)
+│   │   ├── model/            # contrato, reducer do stream, metadados de veredito
+│   │   ├── hooks/            # useAnalyze (TanStack), useQueryParam (?q=)
+│   │   └── components/       # form, chips, legenda, progresso, estados
+│   └── landing/              # copy do hero, ilustração, seções abaixo da dobra
 └── shared/
-    ├── api/                  # DATA LAYER (ver abaixo)
-    ├── components/           # Logo, Container, ui/* (button, card, badge, alert, skeleton, textarea)
-    ├── design-system/        # tokens.css (cores, fontes, radius, sombras, animações) + globals.css
-    └── lib/                  # cn(), formatadores
+    ├── components/           # header, footer, container, empty-state, ui/ (shadcn)
+    ├── design-system/        # tokens.css (cores, tipografia, radius) + fonts.ts
+    └── lib/utils.ts          # cn() ciente dos tokens
 ```
 
-Features futuras (foto, rótulos, receitas) entram como novas pastas em `features/`, reutilizando
-`shared/api` para transporte e `shared/components` para UI.
+## Ponto de troca do mock
 
-## Onde trocar o mock pela API real
+Tudo que fala com "o servidor" passa pela interface `AnalyzeClient` ([src/features/analyze/api/analyze-client.ts](src/features/analyze/api/analyze-client.ts)):
 
-Ponto único: **`src/shared/api/client.ts`**.
-
-```
-src/shared/api/
-├── types.ts          # contrato (AnalyzeRequest, AnalyzeStreamEvent, interface NutriLensApi)
-├── client.ts         # escolhe a implementação e exporta `api`  <-- ponto de troca
-├── mock/             # fixtures + gerador assíncrono que imita SSE
-└── http/             # fetch + parser SSE (já pronto, dormente)
+```ts
+interface AnalyzeClient {
+  stream(request: AnalyzeRequest, options?: { signal?: AbortSignal }): AsyncIterable<AnalyzeStreamEvent>;
+}
 ```
 
-A escolha é feita pela env var `VITE_API_BASE_URL` (veja `.env.example`):
+A instância usada pela UI é escolhida em **um único arquivo**: [src/features/analyze/api/index.ts](src/features/analyze/api/index.ts).
 
-| `VITE_API_BASE_URL` | Implementação |
-| ------------------- | ------------- |
-| vazia / ausente     | `mockApi` — fixtures locais, streaming simulado |
-| definida            | `httpApi` — `POST {base}/analyze`, resposta `text/event-stream` |
+```ts
+// hoje
+export const analyzeClient: AnalyzeClient = createMockAnalyzeClient();
 
-Contrato assumido pelo client HTTP (ajuste só `http/httpApi.ts` se o backend divergir):
-
-```
-POST {VITE_API_BASE_URL}/analyze
-Content-Type: application/json
-{ "query": "feijoada completa" }
-
---> text/event-stream, cada mensagem:
-data: {"type":"macros","calories":780,"protein":42,"carbs":68}
-data: {"type":"token","content":"A feijoada "}
-data: {"type":"done"}
+// quando a API existir
+export const analyzeClient = createHttpAnalyzeClient({
+  baseUrl: process.env.NEXT_PUBLIC_API_URL ?? "",
+});
 ```
 
-Nada fora de `shared/api` sabe qual implementação está ativa. O hook `useAnalyze` consome
-apenas a interface `NutriLensApi`.
+`createHttpAnalyzeClient` ([api/http/http-analyze-client.ts](src/features/analyze/api/http/http-analyze-client.ts)) já está escrito: faz `POST {baseUrl}/analyze` e lê `text/event-stream`, esperando um `AnalyzeStreamEvent` em JSON por linha `data:`. Ajuste path/parsing ali se o contrato final for diferente. Nenhum componente ou hook precisa mudar.
 
-## Estados cobertos
+### Contrato de dados
 
-| Estado        | Quando                                   | UI                                             |
-| ------------- | ---------------------------------------- | ---------------------------------------------- |
-| `idle`        | nada enviado                             | hero + input + sugestões                       |
-| `connecting`  | aguardando o primeiro evento             | skeleton nos cards e no texto                  |
-| `streaming`   | tokens chegando                          | count-up nos macros, cursor piscando, "Parar"  |
-| `done`        | evento `done` recebido                   | badge "Concluído", disclaimer, "Nova análise"  |
-| `interrupted` | usuário parou ou stream caiu sem `done`  | conteúdo parcial + alerta + "Tentar novamente" |
-| `error`       | evento `error` ou falha de rede          | alerta com mensagem + "Tentar novamente"       |
+Definido em [src/features/analyze/model/types.ts](src/features/analyze/model/types.ts):
 
-### Simulando cenários no mock
+```ts
+type AnalyzeStreamEvent =
+  | { type: "token"; content: string }
+  | { type: "ingredients"; items: FlaggedIngredient[] }
+  | { type: "done" }
+  | { type: "error"; message: string };
+```
 
-Inclua a palavra na consulta:
-
-- `erro` — backend responde com `{ type: "error" }`
-- `cortar` — stream é encerrado no meio, sem `done`
-- `lento` — latência inicial de ~3,5 s (bom para ver o skeleton)
-
-Pratos com fixture dedicada: feijoada, salada caesar, ovos/pão francês, açaí, frango grelhado,
-pizza, pão de queijo, strogonoff. Qualquer outro texto gera macros determinísticos a partir do hash.
+Convenção para **produto não encontrado**: o backend emite `{ type: "error", message: "NOT_FOUND: ..." }`. O prefixo é reconhecido em `classifyErrorMessage` ([model/analysis.ts](src/features/analyze/model/analysis.ts)) e vira a tela específica. Qualquer outro `error` vira falha genérica com retry. Erros de transporte (fetch falhou, stream caiu) são lançados pelo client — se já havia dados parciais, a UI mostra o que chegou com aviso de interrupção.
 
 ## Design tokens
 
-Tudo em `src/shared/design-system/tokens.css` (bloco `@theme` do Tailwind v4). Nenhum componente
-usa hex ou nome de fonte diretamente — só utilities derivadas dos tokens (`bg-primary`,
-`text-macro-protein-foreground`, `font-display`, `rounded-lg`, `shadow-soft`...).
+Todos em [src/shared/design-system/tokens.css](src/shared/design-system/tokens.css). Componentes consomem só utilitários semânticos (`bg-primary`, `text-verdict-avoid`, `text-heading`…); não há hex/oklch nem nome de fonte fora dessa pasta.
 
-- Paleta: laranja (primária), coral, mostarda, verde-folha (acento), creme (fundo), cacau (texto)
-- Tipografia: Fredoka (títulos) + Inter (corpo); exatamente 4 tamanhos — `text-display`,
-  `text-title`, `text-body`, `text-caption` (a escala padrão do Tailwind foi desativada)
-- Radius: `sm` `md` `lg` `xl` `full`
-- Sombras: `soft`, `lift`, `focus`
+- **Paleta**: laranja/coral/mostarda + verde fresco de acento sobre creme neutro.
+- **Vereditos** (`--verdict-ok|caution|avoid|danger` + variantes `-soft`/`-border`): reservados exclusivamente para o sistema de classificação. Cada veredito sempre aparece com ícone + rótulo, nunca só cor. Pares texto/fundo medidos ≥ 4.5:1.
+- **Tipografia**: Nunito (títulos) + Inter (corpo); escala de 4 tamanhos (`text-display`, `text-heading`, `text-body`, `text-small`). `text-sm`/`text-xs` do shadcn são mapeados para `text-small`.
+- **Radius**: derivado de `--radius: 1rem`.
 
-`src/shared/lib/utils.ts` estende o `tailwind-merge` com esses tokens para que `cn()` não
-descarte `text-title` ao encontrar `text-primary`.
+Se adicionar um token de cor ou tamanho, registre-o também em [src/shared/lib/utils.ts](src/shared/lib/utils.ts) para que `cn()` não trate `text-body` e `text-verdict-*` como conflito.
 
 ## Acessibilidade
 
-- Contraste AA nos textos sobre fundos claros (cores `*-foreground` dos macros são as versões 700)
-- Navegação por teclado: Enter envia, Shift+Enter quebra linha; foco visível em todos os controles
-- `aria-live="polite"` + `aria-busy` na área de streaming — o leitor de tela anuncia quando o texto
-  se estabiliza, sem ler token a token
-- `prefers-reduced-motion` desativa animações (Framer `useReducedMotion` + CSS)
+- Progresso do streaming anunciado via `role="status"`; explicação em região `aria-live="polite"` com `aria-busy` durante o stream.
+- Chips focáveis por teclado, com tooltip e texto oculto descrevendo veredito e origem (curada vs. estimada).
+- Contraste AA verificado com axe-core em todos os estados.
+
+## Próximos passos previstos
+
+Entrada por foto do rótulo e outras fontes de dado entram como novas implementações de `AnalyzeClient` / novos componentes de entrada em `features/analyze`, sem alterar o fluxo de resultado.
