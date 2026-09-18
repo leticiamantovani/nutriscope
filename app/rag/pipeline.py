@@ -13,7 +13,7 @@ class RAGState(TypedDict):
     ingredients: list[str]
 
 
-def build_rag_graph() -> CompiledStateGraph:
+def build_graph() -> CompiledStateGraph:
 
     graph = StateGraph(RAGState)
     graph.add_node("structured_output", structure_output_node)
