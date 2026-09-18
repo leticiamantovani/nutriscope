@@ -13,4 +13,4 @@ async def chat_service(query: str) -> AsyncGenerator[dict, None]:
             yield event
         yield {"type": "done"}
     except Exception:
-        yield {"type": "error", "message": "Não foi possível analisar o produto."}
+        yield {"type": "error", "message": "Could not analyze the product."}

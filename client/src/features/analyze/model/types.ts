@@ -9,7 +9,7 @@ export interface AnalyzeRequest {
   query: string;
 }
 
-export type Verdict = "adequado" | "moderado" | "evitar" | "cancerigeno";
+export type Verdict = "adequate" | "moderate" | "avoid" | "carcinogenic";
 
 export type IngredientSource = "database" | "estimated";
 

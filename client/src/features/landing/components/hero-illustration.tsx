@@ -8,7 +8,7 @@ export function HeroIllustration() {
       viewBox="0 0 420 340"
       className="mx-auto w-full max-w-md"
       role="img"
-      aria-label="Ilustração de um rótulo sendo analisado por uma lupa"
+      aria-label="Illustration of a food label being analyzed through a magnifying glass"
     >
       {/* backdrop blob */}
       <path

@@ -30,11 +30,11 @@ export function createHttpAnalyzeClient({
           signal,
         });
       } catch (cause) {
-        throw new AnalyzeTransportError("Não foi possível conectar à API", cause);
+        throw new AnalyzeTransportError("Could not connect to the API", cause);
       }
 
       if (!response.ok || !response.body) {
-        throw new AnalyzeTransportError(`API respondeu ${response.status}`);
+        throw new AnalyzeTransportError(`API responded ${response.status}`);
       }
 
       for await (const data of readSseData(response.body)) {
@@ -48,7 +48,7 @@ function parseEvent(data: string): AnalyzeStreamEvent {
   try {
     return JSON.parse(data) as AnalyzeStreamEvent;
   } catch (cause) {
-    throw new AnalyzeTransportError("Evento SSE inválido", cause);
+    throw new AnalyzeTransportError("Invalid SSE event", cause);
   }
 }
 

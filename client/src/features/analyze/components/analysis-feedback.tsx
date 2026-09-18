@@ -26,23 +26,23 @@ export function NotFoundState({ query, onRetry, onEdit }: NotFoundStateProps) {
   return (
     <EmptyState
       icon={<PackageSearch />}
-      title={`Não encontramos “${query}”`}
+      title={`We could not find “${query}”`}
       description={
         <>
-          Tente incluir a marca e o tipo do produto (ex.: “biscoito recheado
-          marca X”) ou confira a grafia. Se for um produto muito novo, ele
-          pode ainda não estar na base.
+          Try including the brand and product type (e.g. “filled cookie brand
+          X”) or double-check the spelling. If it is a very new product, it
+          may not be in the database yet.
         </>
       }
       action={
         <>
           <Button size="lg" onClick={onEdit}>
             <PencilLine data-icon="inline-start" aria-hidden="true" />
-            Tentar outro nome
+            Try another name
           </Button>
           <Button size="lg" variant="outline" onClick={onRetry}>
             <RotateCcw data-icon="inline-start" aria-hidden="true" />
-            Buscar de novo
+            Search again
           </Button>
         </>
       }
@@ -60,20 +60,20 @@ export function ErrorState({ failure, onRetry, onEdit }: ErrorStateProps) {
   return (
     <EmptyState
       icon={isNetwork ? <WifiOff /> : <Unplug />}
-      title={isNetwork ? "Não conseguimos conectar" : "A análise falhou"}
+      title={isNetwork ? "We could not connect" : "The analysis failed"}
       description={
         isNetwork
-          ? "Verifique sua conexão e tente novamente. Nada foi perdido — o produto que você digitou continua no campo."
-          : failure.message || "Ocorreu um erro inesperado ao analisar o produto."
+          ? "Check your connection and try again. Nothing was lost — the product you typed is still in the field."
+          : failure.message || "An unexpected error occurred while analyzing the product."
       }
       action={
         <>
           <Button size="lg" onClick={onRetry}>
             <RotateCcw data-icon="inline-start" aria-hidden="true" />
-            Tentar novamente
+            Try again
           </Button>
           <Button size="lg" variant="ghost" onClick={onEdit}>
-            Editar busca
+            Edit search
           </Button>
         </>
       }
@@ -91,13 +91,13 @@ export function InterruptedBanner({ onRetry }: Pick<FeedbackActions, "onRetry">)
       <p className="flex items-start gap-2">
         <Unplug className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
         <span>
-          <strong className="font-semibold">A conexão caiu no meio da análise.</strong>{" "}
-          Mostramos o que chegou até agora; a explicação pode estar incompleta.
+          <strong className="font-semibold">The connection dropped mid-analysis.</strong>{" "}
+          We are showing what arrived so far; the explanation may be incomplete.
         </span>
       </p>
       <Button size="sm" variant="outline" onClick={onRetry} className="shrink-0">
         <RotateCcw data-icon="inline-start" aria-hidden="true" />
-        Refazer análise
+        Retry analysis
       </Button>
     </div>
   );

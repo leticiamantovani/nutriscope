@@ -6,11 +6,11 @@ import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: {
-    default: "NutriLens — leitura crítica de ingredientes",
+    default: "NutriLens — a critical reading of ingredients",
     template: "%s · NutriLens",
   },
   description:
-    "Digite o nome de um produto industrializado e veja a lista de ingredientes classificada: adequado, moderado, evitar ou cancerígeno. Não é sobre calorias, é sobre o que está no rótulo.",
+    "Type the name of a packaged food and see its ingredient list classified as adequate, moderate, avoid, or carcinogenic. This is not about calories — it is about what is on the label.",
 };
 
 export const viewport: Viewport = {
@@ -23,7 +23,7 @@ export default function RootLayout({
 }: Readonly<{ children: ReactNode }>) {
   return (
     <html
-      lang="pt-BR"
+      lang="en"
       className={`${headingFont.variable} ${bodyFont.variable} h-full`}
     >
       <body className="flex min-h-full flex-col">

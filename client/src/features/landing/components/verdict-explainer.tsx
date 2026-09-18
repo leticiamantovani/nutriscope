@@ -7,11 +7,11 @@ export function VerdictExplainer() {
       <Container>
         <div className="mb-8 max-w-xl space-y-2">
           <h2 id="verdict-title" className="text-heading">
-            Quatro níveis, sem ambiguidade
+            Four levels, no ambiguity
           </h2>
           <p className="text-muted-foreground">
-            Cada nível tem cor, ícone e nome próprios — você nunca depende só
-            da cor para entender o veredito.
+            Each level has its own color, icon, and name — you never rely on
+            color alone to understand the verdict.
           </p>
         </div>
         <VerdictLegend variant="detailed" />

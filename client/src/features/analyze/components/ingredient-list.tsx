@@ -30,14 +30,14 @@ export function IngredientList({ ingredients, className }: IngredientListProps) 
               className={cn("inline-flex items-center gap-1.5 font-semibold", meta.classes.ink)}
             >
               <Icon className="size-4" aria-hidden="true" />
-              {counts[verdict]} {pluralize(verdict, counts[verdict])}
+              {counts[verdict]} {pluralize(verdict)}
             </span>
           );
         })}
       </p>
 
       <motion.ul
-        aria-label="Ingredientes classificados"
+        aria-label="Classified ingredients"
         className="flex flex-wrap items-center gap-2"
         initial="hidden"
         animate="visible"
@@ -58,17 +58,16 @@ export function IngredientList({ ingredients, className }: IngredientListProps) 
 
 function countByVerdict(items: FlaggedIngredient[]): Record<Verdict, number> {
   const counts: Record<Verdict, number> = {
-    adequado: 0,
-    moderado: 0,
-    evitar: 0,
-    cancerigeno: 0,
+    adequate: 0,
+    moderate: 0,
+    avoid: 0,
+    carcinogenic: 0,
   };
   for (const item of items) counts[item.verdict] += 1;
   return counts;
 }
 
-function pluralize(verdict: Verdict, count: number): string {
-  const label = VERDICT_META[verdict].label.toLowerCase();
-  if (count === 1) return label;
-  return verdict === "evitar" ? "para evitar" : `${label}s`;
+function pluralize(verdict: Verdict): string {
+  if (verdict === "avoid") return "to avoid";
+  return VERDICT_META[verdict].label.toLowerCase();
 }

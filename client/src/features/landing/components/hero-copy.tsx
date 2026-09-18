@@ -3,15 +3,15 @@ export function HeroCopy() {
   return (
     <div className="space-y-4">
       <p className="inline-flex items-center rounded-full border border-border bg-card px-3 py-1 text-small font-semibold text-brand-green-strong">
-        Ingredientes, não calorias
+        Ingredients, not calories
       </p>
       <h1 className="text-display">
-        Descubra o que realmente tem no rótulo
+        See what is really on the label
       </h1>
       <p className="max-w-xl text-body text-muted-foreground">
-        Digite o nome de um produto industrializado e veja cada ingrediente
-        classificado — <strong className="font-semibold text-foreground">adequado, moderado, evitar ou cancerígeno</strong> —
-        com uma explicação clara dos pontos de atenção.
+        Type the name of a packaged food and see each ingredient classified
+        as <strong className="font-semibold text-foreground">adequate, moderate, avoid, or carcinogenic</strong>{" "}
+        — plus a clear explanation of what to watch.
       </p>
     </div>
   );
@@ -20,9 +20,9 @@ export function HeroCopy() {
 export function HeroCompactTitle() {
   return (
     <h1 className="text-heading">
-      Análise de ingredientes
+      Ingredient analysis
       <span className="block text-small font-medium text-muted-foreground">
-        Digite outro produto para comparar.
+        Type another product to compare.
       </span>
     </h1>
   );

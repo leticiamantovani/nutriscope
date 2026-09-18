@@ -54,14 +54,14 @@ export function AnalysisPanel({
         {isNotFound ? (
           <motion.div key="not-found" {...fade} className="py-6">
             <h2 id="analysis-title" className="sr-only">
-              Produto não encontrado
+              Product not found
             </h2>
             <NotFoundState query={query} onRetry={onRetry} onEdit={onEdit} />
           </motion.div>
         ) : isHardError ? (
           <motion.div key="error" {...fade} className="py-6">
             <h2 id="analysis-title" className="sr-only">
-              Erro na análise
+              Analysis error
             </h2>
             <ErrorState failure={failure} onRetry={onRetry} onEdit={onEdit} />
           </motion.div>
@@ -70,7 +70,7 @@ export function AnalysisPanel({
             <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="min-w-0 space-y-1">
                 <p className="text-small font-medium text-muted-foreground">
-                  Resultado para
+                  Result for
                 </p>
                 <h2 id="analysis-title" className="text-heading break-words">
                   “{query}”
@@ -84,7 +84,7 @@ export function AnalysisPanel({
             {isInterrupted ? <InterruptedBanner onRetry={onRetry} /> : null}
 
             <div className="space-y-3">
-              <h3 className="text-body font-bold">Ingredientes</h3>
+              <h3 className="text-body font-bold">Ingredients</h3>
               {analysis?.ingredients ? (
                 <IngredientList ingredients={analysis.ingredients} />
               ) : (
@@ -96,7 +96,7 @@ export function AnalysisPanel({
             <div className="space-y-3">
               <h3 className="flex items-center gap-2 text-body font-bold">
                 <Sparkles className="size-4 text-primary" aria-hidden="true" />
-                Pontos de atenção
+                What to watch
               </h3>
               {analysis && analysis.explanation.length > 0 ? (
                 <StreamingText
@@ -108,9 +108,9 @@ export function AnalysisPanel({
               ) : null}
               {phase === "done" ? (
                 <p className="text-small text-muted-foreground">
-                  Explicação gerada por IA a partir de fontes públicas sobre
-                  aditivos. Itens marcados como estimados não foram verificados
-                  em fonte curada.
+                  AI explanation based on public sources about food additives.
+                  Items marked as estimated have not been verified in a curated
+                  source.
                 </p>
               ) : null}
             </div>

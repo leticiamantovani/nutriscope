@@ -60,10 +60,10 @@ export function AnalyzeForm({
       onSubmit={handleSubmit}
       className={cn("w-full space-y-3", className)}
       role="search"
-      aria-label="Analisar produto"
+      aria-label="Analyze product"
     >
       <label htmlFor={inputId} className="sr-only">
-        Nome do produto industrializado
+        Packaged food name
       </label>
       <div className="flex flex-col gap-2 sm:flex-row">
         <div className="relative flex-1">
@@ -79,7 +79,7 @@ export function AnalyzeForm({
             inputMode="search"
             autoComplete="off"
             enterKeyHint="search"
-            placeholder="Ex.: bolacha recheada, miojo, refrigerante…"
+            placeholder="e.g. sandwich cookie, instant noodles, soda…"
             value={value}
             onChange={(event) => {
               setValue(event.target.value);
@@ -103,11 +103,11 @@ export function AnalyzeForm({
                 className="animate-spin"
                 aria-hidden="true"
               />
-              Analisando…
+              Analyzing…
             </>
           ) : (
             <>
-              Analisar
+              Analyze
               <ArrowRight data-icon="inline-end" aria-hidden="true" />
             </>
           )}
@@ -116,13 +116,13 @@ export function AnalyzeForm({
 
       {showHint ? (
         <p id={hintId} className="text-small text-destructive" role="alert">
-          Digite o nome de um produto (pelo menos {MIN_QUERY_LENGTH} letras).
+          Enter a product name (at least {MIN_QUERY_LENGTH} letters).
         </p>
       ) : null}
 
       {examples.length > 0 ? (
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-small text-muted-foreground">
-          <span>Experimente:</span>
+          <span>Try:</span>
           {examples.map((example) => (
             <button
               key={example}

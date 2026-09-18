@@ -8,14 +8,14 @@ export function SiteFooter() {
         <div className="space-y-2">
           <BrandLogo className="text-foreground" />
           <p className="max-w-sm text-small text-muted-foreground">
-            Leitura crítica da lista de ingredientes de alimentos
-            industrializados. Não é um contador de calorias.
+            A critical reading of ingredient lists on packaged foods. This
+            is not a calorie counter.
           </p>
         </div>
         <p className="max-w-md text-small text-muted-foreground">
-          As classificações são informativas e baseadas em fontes públicas
-          sobre aditivos alimentares. Elas não substituem orientação de
-          nutricionista ou médico.
+          Classifications are informational and based on public sources
+          about food additives. They do not replace advice from a
+          dietitian or physician.
         </p>
       </Container>
     </footer>

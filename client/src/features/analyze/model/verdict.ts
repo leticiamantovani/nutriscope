@@ -28,9 +28,9 @@ export interface VerdictMeta {
 }
 
 export const VERDICT_META: Record<Verdict, VerdictMeta> = {
-  adequado: {
-    label: "Adequado",
-    description: "Ingrediente comum, sem alertas relevantes.",
+  adequate: {
+    label: "Adequate",
+    description: "A common ingredient with no notable warnings.",
     icon: CircleCheck,
     severity: 0,
     classes: {
@@ -39,9 +39,9 @@ export const VERDICT_META: Record<Verdict, VerdictMeta> = {
       dot: "bg-verdict-ok",
     },
   },
-  moderado: {
-    label: "Moderado",
-    description: "Tudo bem em pequenas quantidades; atenção à frequência.",
+  moderate: {
+    label: "Moderate",
+    description: "Fine in small amounts; watch how often you eat it.",
     icon: CircleAlert,
     severity: 1,
     classes: {
@@ -50,9 +50,9 @@ export const VERDICT_META: Record<Verdict, VerdictMeta> = {
       dot: "bg-verdict-caution",
     },
   },
-  evitar: {
-    label: "Evitar",
-    description: "Associado a efeitos negativos à saúde; melhor evitar.",
+  avoid: {
+    label: "Avoid",
+    description: "Linked to negative health effects; better to avoid.",
     icon: OctagonX,
     severity: 2,
     classes: {
@@ -61,9 +61,9 @@ export const VERDICT_META: Record<Verdict, VerdictMeta> = {
       dot: "bg-verdict-avoid",
     },
   },
-  cancerigeno: {
-    label: "Cancerígeno",
-    description: "Classificado como possível ou provável cancerígeno.",
+  carcinogenic: {
+    label: "Carcinogenic",
+    description: "Classified as a possible or probable carcinogen.",
     icon: Biohazard,
     severity: 3,
     classes: {
@@ -76,10 +76,10 @@ export const VERDICT_META: Record<Verdict, VerdictMeta> = {
 
 /** Legend/summary order: from most to least concerning. */
 export const VERDICTS_BY_SEVERITY: Verdict[] = [
-  "cancerigeno",
-  "evitar",
-  "moderado",
-  "adequado",
+  "carcinogenic",
+  "avoid",
+  "moderate",
+  "adequate",
 ];
 
 /** Verdicts that must stand out visually in the ingredient list. */

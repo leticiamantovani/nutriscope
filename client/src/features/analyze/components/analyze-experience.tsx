@@ -8,7 +8,7 @@ import { useQueryParam } from "../hooks/use-query-param";
 import { AnalysisPanel } from "./analysis-panel";
 import { AnalyzeForm } from "./analyze-form";
 
-const EXAMPLES = ["bolacha recheada", "miojo", "refrigerante de cola", "salgadinho de milho"];
+const EXAMPLES = ["sandwich cookie", "instant noodles", "cola soda", "corn chips"];
 
 export interface AnalyzeExperienceProps {
   /** Hero copy shown while no query is active (eyebrow, title, lead). */

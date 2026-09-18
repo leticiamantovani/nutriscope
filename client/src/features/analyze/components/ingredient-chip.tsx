@@ -18,7 +18,7 @@ export interface IngredientChipProps {
 
 /**
  * Colored badge for one ingredient. The verdict is conveyed by color AND
- * icon AND an accessible label; "evitar"/"cancerígeno" render larger and
+ * icon AND an accessible label; "avoid"/"carcinogenic" render larger and
  * heavier so they dominate the list. Estimated items get a dashed border
  * plus a sparkle marker.
  */
@@ -29,8 +29,8 @@ export function IngredientChip({ ingredient, className }: IngredientChipProps) {
   const estimated = ingredient.source === "estimated";
 
   const sourceLabel = estimated
-    ? "Estimado pela IA — não verificado em fonte curada"
-    : "Fonte curada";
+    ? "Estimated by AI — not verified in a curated source"
+    : "Curated source";
 
   return (
     <Tooltip>

@@ -4,31 +4,31 @@ import { Container } from "@/shared/components/container";
 const STEPS = [
   {
     icon: Keyboard,
-    title: "Digite o produto",
-    text: "Nome popular basta: “miojo”, “bolacha recheada”. Sem cadastro.",
+    title: "Type the product",
+    text: "A common name is enough: “instant noodles”, “sandwich cookie”. No sign-up.",
   },
   {
     icon: ScanSearch,
-    title: "Lemos a lista",
-    text: "Cada ingrediente é cruzado com uma base curada de aditivos e classificado em quatro níveis.",
+    title: "We read the list",
+    text: "Each ingredient is matched against a curated additives database and classified into four levels.",
   },
   {
     icon: MessageSquareText,
-    title: "Entenda os alertas",
-    text: "A IA explica, em linguagem simples, por que cada item merece atenção.",
+    title: "Understand the alerts",
+    text: "The AI explains, in plain language, why each item deserves attention.",
   },
 ];
 
 export function HowItWorks() {
   return (
-    <section id="como-funciona" aria-labelledby="how-title" className="py-16 sm:py-20">
+    <section id="how-it-works" aria-labelledby="how-title" className="py-16 sm:py-20">
       <Container>
         <div className="mb-8 max-w-xl space-y-2">
           <h2 id="how-title" className="text-heading">
-            Como funciona
+            How it works
           </h2>
           <p className="text-muted-foreground">
-            Um fluxo só, três passos, nenhum menu.
+            One flow, three steps, no menus.
           </p>
         </div>
         <ol className="grid gap-4 sm:grid-cols-3">

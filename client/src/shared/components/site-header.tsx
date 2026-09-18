@@ -13,12 +13,12 @@ export function SiteHeader() {
         >
           <BrandLogo />
         </Link>
-        <nav aria-label="Principal">
+        <nav aria-label="Primary">
           <a
-            href="#como-funciona"
+            href="#how-it-works"
             className="rounded-md px-2 py-1 text-small font-medium text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
           >
-            Como funciona
+            How it works
           </a>
         </nav>
       </Container>

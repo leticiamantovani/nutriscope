@@ -10,12 +10,12 @@ export default function RouteError({ retry }: { retry: () => void }) {
   return (
     <Container className="flex flex-1 items-center justify-center py-16">
       <EmptyState
-        title="Algo saiu do forno errado"
-        description="Ocorreu um erro inesperado ao carregar a página. Tente novamente — se persistir, recarregue o navegador."
+        title="Something came out of the oven wrong"
+        description="An unexpected error occurred while loading the page. Try again — if it persists, reload the browser."
         action={
           <Button onClick={retry} size="lg">
             <RotateCcw data-icon="inline-start" aria-hidden="true" />
-            Tentar novamente
+            Try again
           </Button>
         }
       />

@@ -38,12 +38,12 @@ export function createMockAnalyzeClient(
       if (signal?.aborted) return;
 
       if (current === "error") {
-        throw new AnalyzeTransportError("Mock: falha de rede simulada");
+        throw new AnalyzeTransportError("Mock: simulated network failure");
       }
       if (current === "not-found") {
         yield {
           type: "error",
-          message: "NOT_FOUND: Não encontramos esse produto na base.",
+          message: "NOT_FOUND: We could not find that product in the database.",
         } satisfies AnalyzeStreamEvent;
         return;
       }
@@ -59,7 +59,7 @@ export function createMockAnalyzeClient(
 
       for (const [index, content] of chunks.entries()) {
         if (index >= cutAt) {
-          throw new AnalyzeTransportError("Mock: conexão interrompida");
+          throw new AnalyzeTransportError("Mock: connection interrupted");
         }
         yield { type: "token", content };
         await wait(TOKEN_CADENCE_MS[index % TOKEN_CADENCE_MS.length]);

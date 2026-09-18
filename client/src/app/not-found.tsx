@@ -8,13 +8,13 @@ export default function NotFound() {
   return (
     <Container className="flex flex-1 items-center justify-center py-16">
       <EmptyState
-        title="Página não encontrada"
-        description="O endereço que você abriu não existe. A análise de ingredientes fica na página inicial."
+        title="Page not found"
+        description="The address you opened does not exist. Ingredient analysis lives on the home page."
         action={
           <Button asChild size="lg">
             <Link href="/">
               <Home data-icon="inline-start" aria-hidden="true" />
-              Ir para a análise
+              Go to analysis
             </Link>
           </Button>
         }

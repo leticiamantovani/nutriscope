@@ -14,7 +14,7 @@ export function VerdictLegend({
 }: VerdictLegendProps) {
   return (
     <ul
-      aria-label="Legenda dos vereditos"
+      aria-label="Verdict legend"
       className={cn(
         variant === "inline"
           ? "flex flex-wrap gap-x-4 gap-y-2"

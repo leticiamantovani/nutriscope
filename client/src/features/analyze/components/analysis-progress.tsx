@@ -6,9 +6,9 @@ import { cn } from "@/shared/lib/utils";
 import type { AnalysisPhase } from "../model/analysis";
 
 const STEPS: { phase: AnalysisPhase; label: string; live: string }[] = [
-  { phase: "reading", label: "Lendo ingredientes", live: "Lendo os ingredientes do produto…" },
-  { phase: "classifying", label: "Classificando", live: "Classificando cada ingrediente…" },
-  { phase: "explaining", label: "Explicando", live: "Gerando a explicação…" },
+  { phase: "reading", label: "Reading ingredients", live: "Reading the product ingredients…" },
+  { phase: "classifying", label: "Classifying", live: "Classifying each ingredient…" },
+  { phase: "explaining", label: "Explaining", live: "Generating the explanation…" },
 ];
 
 const ORDER: AnalysisPhase[] = ["reading", "classifying", "explaining", "done"];
@@ -27,7 +27,7 @@ export function AnalysisProgress({ phase, className }: AnalysisProgressProps) {
   const current = ORDER.indexOf(phase);
   const liveText =
     phase === "done"
-      ? "Análise concluída."
+      ? "Analysis complete."
       : STEPS.find((step) => step.phase === phase)?.live ?? "";
 
   return (
