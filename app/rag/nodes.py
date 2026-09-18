@@ -1,5 +1,5 @@
 from app.llm.client import get_model
-from app.rag.pipeline import RAGState
+from app.rag.state import RAGState
 from app.schema.structured_output import StructuredOutput
 from app.services.external_api_service import get_external_api_data
 from app.rag.prompt_builder import build_prompt
