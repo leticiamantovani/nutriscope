@@ -2,10 +2,9 @@ import type { AnalyzeRequest, AnalyzeStreamEvent } from "../../model/types";
 import { AnalyzeTransportError, type AnalyzeClient } from "../analyze-client";
 
 /**
- * Real transport (NOT wired yet — see ../index.ts).
- * Expects `POST {baseUrl}/analyze` answering `text/event-stream`, each
- * `data:` line carrying one JSON-encoded `AnalyzeStreamEvent`.
- * Adjust the path/parsing here when the backend contract is final.
+ * Real transport. Expects `POST {baseUrl}/analyze` answering
+ * `text/event-stream`, each `data:` line carrying one JSON-encoded
+ * `AnalyzeStreamEvent`.
  */
 export interface HttpAnalyzeClientOptions {
   baseUrl: string;

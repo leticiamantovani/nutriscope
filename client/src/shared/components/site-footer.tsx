@@ -15,7 +15,21 @@ export function SiteFooter() {
         <p className="max-w-md text-small text-muted-foreground">
           Classifications are informational and based on public sources
           about food additives. They do not replace advice from a
-          dietitian or physician.
+          dietitian or physician. Contains data from{" "}
+          <a
+            href="https://world.openfoodfacts.org/"
+            className="underline underline-offset-2 hover:text-foreground"
+          >
+            Open Food Facts
+          </a>
+          , available under the{" "}
+          <a
+            href="https://opendatacommons.org/licenses/odbl/1-0/"
+            className="underline underline-offset-2 hover:text-foreground"
+          >
+            Open Database License
+          </a>
+          .
         </p>
       </Container>
     </footer>

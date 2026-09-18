@@ -10,7 +10,7 @@ const STEPS = [
   {
     icon: ScanSearch,
     title: "We read the list",
-    text: "Each ingredient is matched against a curated additives database and classified into four levels.",
+    text: "We look up the product in Open Food Facts and classify each ingredient into four levels.",
   },
   {
     icon: MessageSquareText,

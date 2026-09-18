@@ -108,9 +108,15 @@ export function AnalysisPanel({
               ) : null}
               {phase === "done" ? (
                 <p className="text-small text-muted-foreground">
-                  AI explanation based on public sources about food additives.
-                  Items marked as estimated have not been verified in a curated
-                  source.
+                  Ingredient list from{" "}
+                  <a
+                    href="https://world.openfoodfacts.org/"
+                    className="underline underline-offset-2 hover:text-foreground"
+                  >
+                    Open Food Facts
+                  </a>
+                  . Classifications are informational and may differ from a
+                  specific package.
                 </p>
               ) : null}
             </div>

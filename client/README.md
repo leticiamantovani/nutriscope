@@ -2,7 +2,7 @@
 
 NutriLens UI: the user types the name of a packaged food and receives, in a stream, the ingredient list classified into four verdicts (**adequate · moderate · avoid · carcinogenic**) plus an AI-generated explanation.
 
-This frontend runs **without a backend**: the data layer uses a mocked client that simulates SSE cadence. Switching to the real API is a one-line change (see [Mock swap point](#mock-swap-point)).
+This frontend runs **without a backend** by default: the data layer uses a mocked client that simulates SSE cadence. Point it at the FastAPI server with `NEXT_PUBLIC_API_URL` (see [Mock swap point](#mock-swap-point)).
 
 ## Running
 
@@ -69,16 +69,14 @@ interface AnalyzeClient {
 }
 ```
 
-The instance used by the UI is chosen in **a single file**: [src/features/analyze/api/index.ts](src/features/analyze/api/index.ts).
+The instance used by the UI is chosen in **a single file**: [src/features/analyze/api/index.ts](src/features/analyze/api/index.ts). By default the mock is used. Set `NEXT_PUBLIC_API_URL` (for example `http://localhost:8000`) to send searches to the FastAPI backend, which looks up the product in Open Food Facts.
 
 ```ts
-// today
-export const analyzeClient: AnalyzeClient = createMockAnalyzeClient();
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-// when the API exists
-export const analyzeClient = createHttpAnalyzeClient({
-  baseUrl: process.env.NEXT_PUBLIC_API_URL ?? "",
-});
+export const analyzeClient: AnalyzeClient = apiUrl
+  ? createHttpAnalyzeClient({ baseUrl: apiUrl })
+  : createMockAnalyzeClient();
 ```
 
 `createHttpAnalyzeClient` ([api/http/http-analyze-client.ts](src/features/analyze/api/http/http-analyze-client.ts)) is already written: it `POST`s `{baseUrl}/analyze` and reads `text/event-stream`, expecting one JSON `AnalyzeStreamEvent` per `data:` line. Adjust path/parsing there if the final contract differs. No component or hook needs to change.
