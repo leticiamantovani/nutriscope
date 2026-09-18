@@ -1,16 +1,8 @@
-from typing import TypedDict
-
 from langgraph.graph import END, StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
-from app.rag.nodes import structure_output_node, get_ingredients_info_node, generate_answer_node
-
-
-class RAGState(TypedDict):
-    question: str
-    answer: str
-    foods: list[str]
-    ingredients: list[str]
+from app.rag.nodes import generate_answer_node, get_ingredients_info_node, structure_output_node
+from app.rag.state import RAGState
 
 
 def build_graph() -> CompiledStateGraph:
