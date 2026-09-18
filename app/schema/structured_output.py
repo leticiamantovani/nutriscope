@@ -1,5 +1,19 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-class StructuredOutput(BaseModel):
-   foods: list[str]
-   explanation: str
+from app.schema.chat import FlaggedIngredient
+
+
+class ProductExtraction(BaseModel):
+    """Product the user wants looked up in Open Food Facts."""
+
+    product_name: str = Field(
+        description="Packaged food to search, e.g. Nutella, instant noodles, or a barcode. Empty if none."
+    )
+    brand: str | None = Field(
+        default=None,
+        description="Brand only if the user named one.",
+    )
+
+
+class IngredientClassification(BaseModel):
+    ingredients: list[FlaggedIngredient]
