@@ -1,13 +1,12 @@
 from typing import AsyncGenerator
 
+from app.graph.pipeline import GRAPH
+from app.graph.state import RAGState
 from app.llm.streaming import streaming_llm
-from app.rag.pipeline import build_graph
-from app.rag.state import RAGState
 from app.services.external_api_service import ProductNotFoundError
 
 
 async def chat_service(query: str) -> AsyncGenerator[dict, None]:
-    graph = build_graph()
     state = RAGState(
         question=query,
         search_query="",
@@ -16,7 +15,7 @@ async def chat_service(query: str) -> AsyncGenerator[dict, None]:
         ingredients=[],
     )
     try:
-        async for event in streaming_llm(graph, state):
+        async for event in streaming_llm(GRAPH, state):
             yield event
         yield {"type": "done"}
     except ProductNotFoundError:
