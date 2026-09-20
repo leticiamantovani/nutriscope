@@ -1,4 +1,6 @@
-from app.llm.client import get_model
+from langgraph.config import get_config
+
+from app.llm.client import get_model, message_text
 from app.rag.prompt_builder import (
     build_classification_prompt,
     build_explanation_prompt,
@@ -72,8 +74,12 @@ async def generate_answer_node(state: RAGState) -> dict:
         product=product,
         ingredients=state["ingredients"],
     )
-    response = await model.ainvoke(prompt)
-    return {"answer": _message_text(response)}
+    pieces: list[str] = []
+    async for chunk in model.astream(prompt, config=_runnable_config()):
+        text = message_text(chunk)
+        if text:
+            pieces.append(text)
+    return {"answer": "".join(pieces)}
 
 
 def _search_query_from_extraction(extraction: ProductExtraction) -> str:
@@ -84,11 +90,8 @@ def _search_query_from_extraction(extraction: ProductExtraction) -> str:
     return name
 
 
-def _message_text(response) -> str:
-    text = getattr(response, "text", None)
-    if isinstance(text, str) and text:
-        return text
-    content = getattr(response, "content", None)
-    if isinstance(content, str):
-        return content
-    return str(response)
+def _runnable_config():
+    try:
+        return get_config()
+    except Exception:
+        return None

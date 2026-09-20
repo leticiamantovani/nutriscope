@@ -25,4 +25,6 @@ def parse_ingredient_items(raw: Any) -> list[dict] | None:
 
 
 def to_sse(event: dict) -> str:
-    return f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
+    name = event.get("type", "message")
+    payload = json.dumps(event, ensure_ascii=False)
+    return f"event: {name}\ndata: {payload}\n\n"
