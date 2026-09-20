@@ -1,4 +1,13 @@
-import type { AnalyzeStreamEvent, FlaggedIngredient } from "./types";
+import {
+  CLASSIFY_NODES,
+  GENERATE_ANSWER,
+  NODE_PHASE,
+} from "./graph";
+import type {
+  AnalyzeStreamEvent,
+  FlaggedIngredient,
+  StreamPhase,
+} from "./types";
 
 /**
  * Why a run stopped without a complete result.
@@ -25,6 +34,8 @@ export interface Analysis {
   done: boolean;
   /** Set when the backend emits an `error` event. */
   failure: AnalyzeFailure | null;
+  /** Last graph-node phase from the stream, if the backend sent one. */
+  streamPhase: StreamPhase | null;
 }
 
 export const EMPTY_ANALYSIS: Analysis = {
@@ -32,6 +43,7 @@ export const EMPTY_ANALYSIS: Analysis = {
   explanation: "",
   done: false,
   failure: null,
+  streamPhase: null,
 };
 
 /**
@@ -44,14 +56,34 @@ export function reduceAnalysis(
   event: AnalyzeStreamEvent,
 ): Analysis {
   switch (event.type) {
-    case "ingredients":
-      return { ...state, ingredients: event.items };
-    case "token":
-      return { ...state, explanation: state.explanation + event.content };
+    case "on_chain_start": {
+      const phase = event.name ? NODE_PHASE[event.name] : undefined;
+      return phase ? { ...state, streamPhase: phase } : state;
+    }
+    case "on_chain_end": {
+      const classify =
+        CLASSIFY_NODES.has(event.name ?? "") ||
+        CLASSIFY_NODES.has(event.node ?? "");
+      if (classify && event.items?.length) {
+        return { ...state, ingredients: event.items };
+      }
+      return state;
+    }
+    case "on_chat_model_stream": {
+      if (event.node === GENERATE_ANSWER && event.content) {
+        return { ...state, explanation: state.explanation + event.content };
+      }
+      return state;
+    }
     case "done":
       return { ...state, done: true };
     case "error":
-      return { ...state, failure: classifyErrorMessage(event.message) };
+      return {
+        ...state,
+        failure: classifyErrorMessage(event.message ?? ""),
+      };
+    default:
+      return state;
   }
 }
 
@@ -88,6 +120,7 @@ export function derivePhase(input: {
   if (failure) return "failed";
   if (analysis?.done) return "done";
   if (!fetching) return analysis ? "done" : "idle";
+  if (analysis?.streamPhase) return analysis.streamPhase;
   if (!analysis?.ingredients) return "reading";
   if (analysis.explanation.length === 0) return "classifying";
   return "explaining";

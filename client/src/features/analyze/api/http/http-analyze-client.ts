@@ -3,8 +3,9 @@ import { AnalyzeTransportError, type AnalyzeClient } from "../analyze-client";
 
 /**
  * Real transport. Expects `POST {baseUrl}/analyze` answering
- * `text/event-stream`, each `data:` line carrying one JSON-encoded
- * `AnalyzeStreamEvent`.
+ * `text/event-stream`. `event:` is the LangChain name (`on_chain_start`,
+ * `on_chat_model_stream`, …). `data:` is the JSON payload; the client
+ * uses `type` inside it.
  */
 export interface HttpAnalyzeClientOptions {
   baseUrl: string;

@@ -20,10 +20,17 @@ export interface FlaggedIngredient {
   source: IngredientSource;
 }
 
-export type AnalyzeStreamEvent =
-  /** Explanation text, arrives incrementally. */
-  | { type: "token"; content: string }
-  /** Full ingredient list, arrives at once. */
-  | { type: "ingredients"; items: FlaggedIngredient[] }
-  | { type: "done" }
-  | { type: "error"; message: string };
+export type StreamPhase = "reading" | "classifying" | "explaining";
+
+/**
+ * Wire event. `type` is the LangChain `astream_events` name
+ * (`on_chain_start`, `on_chat_model_stream`, …) or app-level `done` / `error`.
+ */
+export interface AnalyzeStreamEvent {
+  type: string;
+  name?: string | null;
+  node?: string | null;
+  content?: string;
+  items?: FlaggedIngredient[];
+  message?: string;
+}
