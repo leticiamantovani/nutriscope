@@ -1,12 +1,12 @@
 from langgraph.config import get_config
 
 from app.llm.client import get_model, message_text
-from app.rag.prompt_builder import (
+from app.graph.prompt_builder import (
     build_classification_prompt,
     build_explanation_prompt,
     build_extraction_prompt,
 )
-from app.rag.state import RAGState
+from app.graph.state import RAGState
 from app.schema.structured_output import IngredientClassification, ProductExtraction
 from app.services.external_api_service import (
     ProductNotFoundError,

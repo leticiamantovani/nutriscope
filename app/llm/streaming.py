@@ -1,7 +1,7 @@
 from typing import Any, AsyncGenerator
 
 from app.llm.client import message_text
-from app.rag.state import RAGState
+from app.graph.state import RAGState
 from app.schema.chat import parse_ingredient_items
 
 
