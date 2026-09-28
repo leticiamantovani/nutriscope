@@ -1,11 +1,9 @@
-import {
-  CLASSIFY_NODES,
-  GENERATE_ANSWER,
-  NODE_PHASE,
-} from "./graph";
+import { GENERATE_ANSWER, NODE_PHASE } from "./graph";
 import type {
   AnalyzeStreamEvent,
   FlaggedIngredient,
+  GraphState,
+  ProductSummary,
   StreamPhase,
 } from "./types";
 
@@ -29,6 +27,9 @@ export interface AnalyzeFailure {
 
 /** Accumulated result of a streaming run, rebuilt from events. */
 export interface Analysis {
+  /** Query the backend used to look the product up. */
+  searchQuery: string | null;
+  product: ProductSummary | null;
   ingredients: FlaggedIngredient[] | null;
   explanation: string;
   done: boolean;
@@ -39,6 +40,8 @@ export interface Analysis {
 }
 
 export const EMPTY_ANALYSIS: Analysis = {
+  searchQuery: null,
+  product: null,
   ingredients: null,
   explanation: "",
   done: false,
@@ -60,21 +63,13 @@ export function reduceAnalysis(
       const phase = event.name ? NODE_PHASE[event.name] : undefined;
       return phase ? { ...state, streamPhase: phase } : state;
     }
-    case "on_chain_end": {
-      const classify =
-        CLASSIFY_NODES.has(event.name ?? "") ||
-        CLASSIFY_NODES.has(event.node ?? "");
-      if (classify && event.items?.length) {
-        return { ...state, ingredients: event.items };
-      }
-      return state;
-    }
-    case "on_chat_model_stream": {
+    case "on_chain_end":
+      return event.update ? applyStateUpdate(state, event.update) : state;
+    case "on_chat_model_stream":
       if (event.node === GENERATE_ANSWER && event.content) {
         return { ...state, explanation: state.explanation + event.content };
       }
       return state;
-    }
     case "done":
       return { ...state, done: true };
     case "error":
@@ -85,6 +80,19 @@ export function reduceAnalysis(
     default:
       return state;
   }
+}
+
+/**
+ * Merges a node's state delta. The final `answer` replaces the
+ * token-built explanation so the text matches what the backend stored.
+ */
+function applyStateUpdate(state: Analysis, update: GraphState): Analysis {
+  const next = { ...state };
+  if (update.search_query !== undefined) next.searchQuery = update.search_query;
+  if (update.product !== undefined) next.product = update.product;
+  if (update.ingredients !== undefined) next.ingredients = update.ingredients;
+  if (update.answer) next.explanation = update.answer;
+  return next;
 }
 
 /**

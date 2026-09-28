@@ -14,14 +14,23 @@ async def chat_service(query: str) -> AsyncGenerator[dict, None]:
         product=None,
         ingredients=[],
     )
+    # Node of the last event. The graph is sequential, so on failure it is
+    # the node that raised (`None` = outside any node).
+    node = None
     try:
         async for event in streaming_llm(GRAPH, state):
+            node = event.get("node")
             yield event
         yield {"type": "done"}
     except ProductNotFoundError:
-        yield {
-            "type": "error",
-            "message": "NOT_FOUND: We could not find that product.",
-        }
+        yield _error(node, "NOT_FOUND: We could not find that product.")
     except Exception:
-        yield {"type": "error", "message": "Could not analyze the product."}
+        yield _error(node, "Could not analyze the product.")
+
+
+def _error(node: str | None, message: str) -> dict:
+    return {
+        "type": "error",
+        "node": node,
+        "message": message,
+    }

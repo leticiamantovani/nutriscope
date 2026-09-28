@@ -1,3 +1,6 @@
+from app.graph.state import ProductSnapshot
+
+
 def build_extraction_prompt(question: str) -> str:
     return f"""
 You extract the packaged food a user wants analyzed.
@@ -15,7 +18,7 @@ Rules:
 """.strip()
 
 
-def build_classification_prompt(question: str, product: dict) -> str:
+def build_classification_prompt(question: str, product: ProductSnapshot) -> str:
     additives = ", ".join(product.get("additives_tags") or []) or "none listed"
     nova = product.get("nova_group")
     nutriscore = product.get("nutriscore_grade") or "unknown"
@@ -42,10 +45,13 @@ Rules:
 """.strip()
 
 
-def build_explanation_prompt(question: str, product: dict, ingredients: list[dict]) -> str:
+def build_explanation_prompt(
+    question: str,
+    product: ProductSnapshot,
+    ingredients: list[dict],
+) -> str:
     flagged = "\n".join(
-        f"- {item.get('name')} [{item.get('verdict')}]"
-        for item in ingredients
+        f"- {item.get('name')} [{item.get('verdict')}]" for item in ingredients
     )
     return f"""
 You are a helpful assistant that explains whether the ingredients of a packaged food are concerning.

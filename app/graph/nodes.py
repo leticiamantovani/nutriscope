@@ -1,5 +1,3 @@
-from langgraph.config import get_config
-
 from app.llm.client import get_model, message_text
 from app.graph.prompt_builder import (
     build_classification_prompt,
@@ -75,7 +73,7 @@ async def generate_answer_node(state: RAGState) -> dict:
         ingredients=state["ingredients"],
     )
     pieces: list[str] = []
-    async for chunk in model.astream(prompt, config=_runnable_config()):
+    async for chunk in model.astream(prompt):
         text = message_text(chunk)
         if text:
             pieces.append(text)
@@ -88,10 +86,3 @@ def _search_query_from_extraction(extraction: ProductExtraction) -> str:
     if brand and brand.casefold() not in name.casefold():
         return f"{brand} {name}".strip()
     return name
-
-
-def _runnable_config():
-    try:
-        return get_config()
-    except Exception:
-        return None

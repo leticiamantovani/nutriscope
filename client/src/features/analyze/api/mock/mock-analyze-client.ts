@@ -4,9 +4,13 @@ import {
   GET_INGREDIENTS_INFO,
   STRUCTURED_OUTPUT,
 } from "../../model/graph";
-import type { AnalyzeStreamEvent } from "../../model/types";
+import type { AnalyzeStreamEvent, GraphState } from "../../model/types";
 import { AnalyzeTransportError, type AnalyzeClient } from "../analyze-client";
-import { SAMPLE_EXPLANATION, SAMPLE_INGREDIENTS } from "./fixtures";
+import {
+  SAMPLE_EXPLANATION,
+  SAMPLE_INGREDIENTS,
+  SAMPLE_PRODUCT,
+} from "./fixtures";
 
 /**
  * Deterministic in-memory stream that mimics SSE cadence.
@@ -41,6 +45,9 @@ export function createMockAnalyzeClient(
       const current = scenario();
 
       yield chainStart(STRUCTURED_OUTPUT);
+      yield chainEnd(STRUCTURED_OUTPUT, {
+        search_query: SAMPLE_PRODUCT.name,
+      });
       yield chainStart(GET_INGREDIENTS_INFO);
       await wait(READING_MS);
       if (signal?.aborted) return;
@@ -56,17 +63,20 @@ export function createMockAnalyzeClient(
         return;
       }
 
+      yield chainEnd(GET_INGREDIENTS_INFO, { product: SAMPLE_PRODUCT });
       yield chainStart(CLASSIFY_INGREDIENTS);
       await wait(CLASSIFYING_MS);
       if (signal?.aborted) return;
 
-      yield {
-        type: "on_chain_end",
-        name: CLASSIFY_INGREDIENTS,
-        node: CLASSIFY_INGREDIENTS,
-        items: SAMPLE_INGREDIENTS,
-      };
+      yield chainEnd(CLASSIFY_INGREDIENTS, {
+        ingredients: SAMPLE_INGREDIENTS,
+      });
       yield chainStart(GENERATE_ANSWER);
+      yield {
+        type: "on_chat_model_start",
+        name: "ChatGoogleGenerativeAI",
+        node: GENERATE_ANSWER,
+      };
 
       const chunks = chunkText(SAMPLE_EXPLANATION);
       const cutAt =
@@ -86,6 +96,7 @@ export function createMockAnalyzeClient(
         if (signal?.aborted) return;
       }
 
+      yield chainEnd(GENERATE_ANSWER, { answer: SAMPLE_EXPLANATION });
       yield { type: "done" };
     },
   };
@@ -93,6 +104,10 @@ export function createMockAnalyzeClient(
 
 function chainStart(node: string): AnalyzeStreamEvent {
   return { type: "on_chain_start", name: node, node };
+}
+
+function chainEnd(node: string, update: GraphState): AnalyzeStreamEvent {
+  return { type: "on_chain_end", name: node, node, update };
 }
 
 /** Splits text into word-sized chunks, keeping whitespace attached. */

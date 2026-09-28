@@ -22,15 +22,45 @@ export interface FlaggedIngredient {
 
 export type StreamPhase = "reading" | "classifying" | "explaining";
 
+/** Product fields exposed by the backend (trimmed Open Food Facts record). */
+export interface ProductSummary {
+  code: string;
+  name: string;
+  brands: string;
+  url: string;
+  nova_group: number | null;
+  nutriscore_grade: string | null;
+}
+
 /**
- * Wire event. `type` is the LangChain `astream_events` name
- * (`on_chain_start`, `on_chat_model_stream`, …) or app-level `done` / `error`.
+ * Client view of the graph state. Partial when it is a node's delta:
+ * only the keys the node returned are present.
+ */
+export interface GraphState {
+  /** What the user typed. */
+  question?: string;
+  search_query?: string;
+  product?: ProductSummary | null;
+  ingredients?: FlaggedIngredient[];
+  answer?: string;
+}
+
+/**
+ * JSON-safe view of a LangChain `astream_events` event, plus the app-level
+ * `done` and `error` events.
+ *
+ * Graph node events may carry a state projection:
+ * - `on_chain_start`: `input`, the state the chain received.
+ * - node `on_chain_end`: `update`, the state delta the node wrote.
+ * - root `on_chain_end`: final `state`.
  */
 export interface AnalyzeStreamEvent {
   type: string;
   name?: string | null;
   node?: string | null;
   content?: string;
-  items?: FlaggedIngredient[];
+  input?: GraphState;
+  state?: GraphState;
+  update?: GraphState;
   message?: string;
 }

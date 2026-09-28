@@ -1,4 +1,4 @@
-import type { FlaggedIngredient } from "../../model/types";
+import type { FlaggedIngredient, ProductSummary } from "../../model/types";
 
 /**
  * Fixed sample product returned for ANY query.
@@ -6,6 +6,15 @@ import type { FlaggedIngredient } from "../../model/types";
  * exercised by the mock.
  */
 export const SAMPLE_PRODUCT_NAME = "Chocolate-flavored filled cookie";
+
+export const SAMPLE_PRODUCT: ProductSummary = {
+  code: "0000000000000",
+  name: SAMPLE_PRODUCT_NAME,
+  brands: "Sample Brand",
+  url: "https://world.openfoodfacts.org/",
+  nova_group: 4,
+  nutriscore_grade: "e",
+};
 
 export const SAMPLE_INGREDIENTS: FlaggedIngredient[] = [
   { name: "Enriched wheat flour", verdict: "adequate", source: "database" },

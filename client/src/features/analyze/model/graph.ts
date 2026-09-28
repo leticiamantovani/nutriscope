@@ -5,11 +5,7 @@ export const GET_INGREDIENTS_INFO = "get_ingredients_info";
 export const CLASSIFY_INGREDIENTS = "classify_ingredients";
 export const GENERATE_ANSWER = "generate_answer";
 
-export const CLASSIFY_NODES = new Set([
-  CLASSIFY_INGREDIENTS,
-  "classify_ingredients_node",
-]);
-
+/** UI phase for each graph node. Keep in sync with the backend stream projection. */
 export const NODE_PHASE: Record<string, StreamPhase> = {
   [STRUCTURED_OUTPUT]: "reading",
   [GET_INGREDIENTS_INFO]: "reading",
