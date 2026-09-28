@@ -3,9 +3,9 @@ from typing import Any
 
 from langgraph.graph.state import CompiledStateGraph
 
-from app.graph.state import ProductSnapshot, RAGState
-from app.llm.client import message_text
-from app.schema.chat import parse_ingredient_items
+from app.agent_executors.state import ProductSnapshot, RAGState
+from app.clients.llm import message_text
+from app.models.api.ingredients import parse_ingredient_items
 
 # Product fields the client renders. The rest (raw ingredient text,
 # additive tags) only feeds the prompts.

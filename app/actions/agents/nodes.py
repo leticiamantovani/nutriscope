@@ -1,11 +1,11 @@
-from app.llm.client import get_model, message_text
-from app.graph.prompt_builder import (
+from app.actions.agents.prompt_builder import (
     build_classification_prompt,
     build_explanation_prompt,
     build_extraction_prompt,
 )
-from app.graph.state import RAGState
-from app.schema.structured_output import IngredientClassification, ProductExtraction
+from app.agent_executors.state import RAGState
+from app.clients.llm import get_model, message_text
+from app.models.api.ingredients import IngredientClassification, ProductExtraction
 from app.services.external_api_service import (
     ProductNotFoundError,
     is_barcode,

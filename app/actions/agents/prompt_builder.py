@@ -1,4 +1,4 @@
-from app.graph.state import ProductSnapshot
+from app.agent_executors.state import ProductSnapshot
 
 
 def build_extraction_prompt(question: str) -> str:
