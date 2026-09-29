@@ -5,6 +5,7 @@ import os
 
 load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
+LLM_MODEL = os.getenv("LLM_MODEL", "gemini-3.7-flash")
 OPENFOODFACTS_BASE_URL = os.getenv(
     "OPENFOODFACTS_BASE_URL", "https://world.openfoodfacts.org"
 ).rstrip("/")

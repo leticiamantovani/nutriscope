@@ -1,9 +1,8 @@
-import json
-
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 
-from app.agent_executors.pipeline import execute_agent
+from app.actions.product_analysis.analyze_product import analyze_product
+from app.api.formatters.sse import to_sse
 from app.models.api.chat import AnalyzeRequest
 
 router = APIRouter()
@@ -12,8 +11,8 @@ router = APIRouter()
 @router.post("/analyze")
 async def analyze(body: AnalyzeRequest):
     async def event_stream():
-        async for event in execute_agent(body.query):
-            yield _to_sse(event)
+        async for event in analyze_product(body.query):
+            yield to_sse(event)
 
     return StreamingResponse(
         event_stream(),
@@ -24,9 +23,3 @@ async def analyze(body: AnalyzeRequest):
             "X-Accel-Buffering": "no",
         },
     )
-
-
-def _to_sse(event: dict) -> str:
-    name = event.get("type", "message")
-    payload = json.dumps(event, ensure_ascii=False)
-    return f"event: {name}\ndata: {payload}\n\n"

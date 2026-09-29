@@ -1,17 +1,13 @@
-from collections.abc import AsyncIterator
-
 from langgraph.graph import END, StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
-from app.actions.agents.nodes import (
+from app.workflows.product_analysis.nodes import (
     classify_ingredients_node,
     generate_answer_node,
     get_ingredients_info_node,
     structure_output_node,
 )
-from app.agent_executors.state import RAGState
-from app.agent_executors.streaming.handlers import streaming_llm
-from app.services.external_api_service import ProductNotFoundError
+from app.workflows.product_analysis.state import RAGState
 
 STRUCTURED_OUTPUT = "structured_output"
 GET_INGREDIENTS_INFO = "get_ingredients_info"
@@ -35,31 +31,3 @@ def build_graph() -> CompiledStateGraph:
 
 # Topology is compiled once per process. Each request only supplies state.
 GRAPH = build_graph()
-
-
-async def execute_agent(query: str) -> AsyncIterator[dict]:
-    state = RAGState(
-        question=query,
-        search_query="",
-        answer="",
-        product=None,
-        ingredients=[],
-    )
-    node = None
-    try:
-        async for event in streaming_llm(GRAPH, state):
-            node = event.get("node")
-            yield event
-        yield {"type": "done"}
-    except ProductNotFoundError:
-        yield _error(node, "NOT_FOUND: We could not find that product.")
-    except Exception:
-        yield _error(node, "Could not analyze the product.")
-
-
-def _error(node: str | None, message: str) -> dict:
-    return {
-        "type": "error",
-        "node": node,
-        "message": message,
-    }

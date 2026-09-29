@@ -1,16 +1,17 @@
-from app.actions.agents.prompt_builder import (
-    build_classification_prompt,
-    build_explanation_prompt,
-    build_extraction_prompt,
-)
-from app.agent_executors.state import RAGState
 from app.clients.llm import get_model, message_text
-from app.models.api.ingredients import IngredientClassification, ProductExtraction
-from app.services.external_api_service import (
+from app.clients.open_food_facts import (
     ProductNotFoundError,
     is_barcode,
     search_product,
 )
+from app.config.settings import LLM_MODEL
+from app.models.api.ingredients import IngredientClassification, ProductExtraction
+from app.workflows.product_analysis.prompts import (
+    build_classification_prompt,
+    build_explanation_prompt,
+    build_extraction_prompt,
+)
+from app.workflows.product_analysis.state import RAGState
 
 
 async def structure_output_node(state: RAGState) -> dict:
@@ -19,7 +20,7 @@ async def structure_output_node(state: RAGState) -> dict:
         return {"search_query": question}
 
     model = get_model(
-        model_name="gemini-3.7-flash",
+        model_name=LLM_MODEL,
         config={"thinking_level": "medium"},
     ).with_structured_output(ProductExtraction)
     result = await model.ainvoke(build_extraction_prompt(question))
@@ -45,7 +46,7 @@ async def classify_ingredients_node(state: RAGState) -> dict:
         return {"ingredients": []}
 
     model = get_model(
-        model_name="gemini-3.7-flash",
+        model_name=LLM_MODEL,
         config={"thinking_level": "medium"},
     ).with_structured_output(IngredientClassification)
     prompt = build_classification_prompt(state["question"], product)
@@ -64,7 +65,7 @@ async def generate_answer_node(state: RAGState) -> dict:
         return {"answer": ""}
 
     model = get_model(
-        model_name="gemini-3.7-flash",
+        model_name=LLM_MODEL,
         config={"thinking_level": "high"},
     )
     prompt = build_explanation_prompt(

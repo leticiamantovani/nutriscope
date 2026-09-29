@@ -3,9 +3,9 @@ from typing import Any
 
 from langgraph.graph.state import CompiledStateGraph
 
-from app.agent_executors.state import ProductSnapshot, RAGState
 from app.clients.llm import message_text
 from app.models.api.ingredients import parse_ingredient_items
+from app.workflows.product_analysis.state import ProductSnapshot, RAGState
 
 # Product fields the client renders. The rest (raw ingredient text,
 # additive tags) only feeds the prompts.
@@ -65,7 +65,7 @@ def to_client_event(event: Mapping[str, Any]) -> dict:
     return payload
 
 
-async def streaming_llm(
+async def stream_workflow(
     graph: CompiledStateGraph,
     state: RAGState,
 ) -> AsyncIterator[dict]:

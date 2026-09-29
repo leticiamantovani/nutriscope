@@ -4,7 +4,7 @@ from typing import Any
 
 import httpx
 
-from app.core.config import (
+from app.config.settings import (
     OPENFOODFACTS_BASE_URL,
     OPENFOODFACTS_SEARCH_URL,
     OPENFOODFACTS_TIMEOUT_SECONDS,
