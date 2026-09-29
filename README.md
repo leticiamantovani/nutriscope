@@ -117,12 +117,15 @@ The response uses `text/event-stream`. Events expose graph progress, state updat
 
 ```text
 app/
-  actions/agents/        Prompts and graph nodes
-  agent_executors/       Graph definition, state, and streaming
-  clients/               Gemini client
+  actions/product_analysis/  Product analysis use case
+  api/formatters/        Server-Sent Event formatting
+  clients/               Gemini and Open Food Facts clients
+  config/                Environment settings
   endpoints/             FastAPI routes
+  middlewares/           CORS and shared HTTP behavior
   models/                API and structured output models
-  services/              Open Food Facts integration
+  workflows/             Product analysis graph, nodes, prompts, and state
+  workflow_executor/     Workflow execution and streaming
 client/
   src/app/               Next.js routes and providers
   src/features/analyze/  Analysis flow, API clients, and UI states
