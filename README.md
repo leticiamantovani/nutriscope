@@ -99,6 +99,24 @@ Open `http://localhost:3000`.
 
 If `NEXT_PUBLIC_API_URL` is not set, the frontend uses local mock data. This is useful for UI development without the backend.
 
+## Deploy
+
+The backend and frontend deploy as two services from the same repository.
+
+### Backend (Railway)
+
+- Root directory: repository root. `railway.json` sets the start command and the `/health` healthcheck.
+- Environment variables:
+  - `GOOGLE_API_KEY`: Gemini API key.
+  - `ALLOWED_ORIGINS`: comma-separated frontend origins, for example `https://nutriscope.vercel.app`.
+  - `LLM_MODEL` (optional): defaults to `gemini-3.7-flash`.
+
+### Frontend (Vercel)
+
+- Root directory: `client`.
+- Environment variables:
+  - `NEXT_PUBLIC_API_URL`: public backend URL without a trailing slash, for example `https://nutriscope-api.up.railway.app`. It is inlined at build time, so redeploy after changing it.
+
 ## API
 
 ### `POST /analyze`

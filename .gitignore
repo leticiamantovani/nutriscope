@@ -4,3 +4,4 @@
 .venv
 **/.venv
 /prax
+__pycache__

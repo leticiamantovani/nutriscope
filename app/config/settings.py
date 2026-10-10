@@ -18,3 +18,13 @@ OPENFOODFACTS_USER_AGENT = os.getenv(
     "NutriScope/0.1 (https://world.openfoodfacts.org)",
 )
 OPENFOODFACTS_TIMEOUT_SECONDS = float(os.getenv("OPENFOODFACTS_TIMEOUT_SECONDS", "20"))
+# Comma-separated list of origins allowed to call the API.
+ALLOWED_ORIGINS = [
+    origin.strip().rstrip("/")
+    for origin in os.getenv(
+        "ALLOWED_ORIGINS",
+        "http://localhost:3000,http://127.0.0.1:3000,"
+        "http://localhost:3001,http://127.0.0.1:3001",
+    ).split(",")
+    if origin.strip()
+]
