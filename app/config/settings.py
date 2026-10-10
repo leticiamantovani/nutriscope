@@ -28,3 +28,5 @@ ALLOWED_ORIGINS = [
     ).split(",")
     if origin.strip()
 ]
+# Optional regex for dynamic origins, e.g. Vercel preview deployments.
+ALLOWED_ORIGIN_REGEX = os.getenv("ALLOWED_ORIGIN_REGEX") or None

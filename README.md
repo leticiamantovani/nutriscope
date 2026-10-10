@@ -109,6 +109,7 @@ The backend and frontend deploy as two services from the same repository.
 - Environment variables:
   - `GOOGLE_API_KEY`: Gemini API key.
   - `ALLOWED_ORIGINS`: comma-separated frontend origins, for example `https://nutriscope.vercel.app`.
+  - `ALLOWED_ORIGIN_REGEX` (optional): regex for dynamic origins such as Vercel preview URLs, for example `https://nutriscope-[a-z0-9-]+-leticiamantovanis-projects\.vercel\.app`.
   - `LLM_MODEL` (optional): defaults to `gemini-3.7-flash`.
 
 ### Frontend (Vercel)
