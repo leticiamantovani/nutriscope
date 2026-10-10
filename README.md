@@ -68,7 +68,7 @@ Create a virtual environment and install the Python dependencies:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r app/requirements.txt
+pip install -r requirements.txt
 ```
 
 Create `app/.env`:

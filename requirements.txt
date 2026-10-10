@@ -1,1 +1,6 @@
--r app/requirements.txt
+fastapi[standard]
+langchain-google-genai
+langgraph
+httpx
+python-dotenv
+pydantic

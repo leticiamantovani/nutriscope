@@ -1,7 +1,0 @@
-fastapi[standard]
-langchain-google-genai
-langgraph
-UUID
-httpx
-python-dotenv
-pydantic
