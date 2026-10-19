@@ -6,8 +6,8 @@ import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: {
-    default: "NutriLens — a critical reading of ingredients",
-    template: "%s · NutriLens",
+    default: "NutriScope — a critical reading of ingredients",
+    template: "%s · NutriScope",
   },
   description:
     "Type the name of a packaged food and see its ingredient list classified as adequate, moderate, avoid, or carcinogenic. This is not about calories — it is about what is on the label.",

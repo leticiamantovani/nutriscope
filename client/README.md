@@ -1,6 +1,6 @@
-# NutriLens — frontend
+# NutriScope — frontend
 
-NutriLens UI: the user types the name of a packaged food and receives, in a stream, the ingredient list classified into four verdicts (**adequate · moderate · avoid · carcinogenic**) plus an AI-generated explanation.
+NutriScope UI: the user types the name of a packaged food and receives, in a stream, the ingredient list classified into four verdicts (**adequate · moderate · avoid · carcinogenic**) plus an AI-generated explanation.
 
 This frontend runs **without a backend** by default: the data layer uses a mocked client that simulates SSE cadence. Point it at the FastAPI server with `NEXT_PUBLIC_API_URL` (see [Mock swap point](#mock-swap-point)).
 

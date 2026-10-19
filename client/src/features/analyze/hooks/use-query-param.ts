@@ -2,7 +2,7 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 
-const CHANGE_EVENT = "nutrilens:querychange";
+const CHANGE_EVENT = "nutriscope:querychange";
 
 function subscribe(onChange: () => void) {
   window.addEventListener("popstate", onChange);

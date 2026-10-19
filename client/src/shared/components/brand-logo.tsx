@@ -6,7 +6,7 @@ interface BrandLogoProps {
   markOnly?: boolean;
 }
 
-/** NutriLens wordmark: a geometric lens over a leaf, drawn with brand tokens. */
+/** NutriScope wordmark: a magnifying lens over a leaf, drawn with brand tokens. */
 export function BrandLogo({ className, markOnly = false }: BrandLogoProps) {
   return (
     <span
@@ -16,7 +16,7 @@ export function BrandLogo({ className, markOnly = false }: BrandLogoProps) {
         viewBox="0 0 32 32"
         className="size-8 shrink-0"
         role="img"
-        aria-label="NutriLens"
+        aria-label="NutriScope"
       >
         <circle cx="14" cy="14" r="11" className="fill-brand-orange" />
         <path
@@ -47,7 +47,7 @@ export function BrandLogo({ className, markOnly = false }: BrandLogoProps) {
       </svg>
       {markOnly ? null : (
         <span className="text-heading leading-none">
-          Nutri<span className="text-primary">Lens</span>
+          Nutri<span className="text-primary">Scope</span>
         </span>
       )}
     </span>

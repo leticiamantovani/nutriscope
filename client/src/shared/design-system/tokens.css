@@ -1,5 +1,5 @@
 /*
- * NutriLens design tokens.
+ * NutriScope design tokens.
  * Single source of truth for color, type scale, radius and motion.
  * Components must consume these through Tailwind utilities
  * (bg-primary, text-verdict-avoid, font-heading, text-display…) —
