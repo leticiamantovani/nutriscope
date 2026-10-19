@@ -1,6 +1,6 @@
 # NutriScope
 
-[Open the live demo](https://your-demo-url.com)
+[Open the live demo](https://nutriscope-ten.vercel.app/)
 
 <!-- Replace the path below with your product screenshot. -->
 ![NutriScope product analysis](docs/images/nutriscope-demo.png)
