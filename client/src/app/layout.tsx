@@ -6,7 +6,7 @@ import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: {
-    default: "NutriScope — a critical reading of ingredients",
+    default: "NutriScope",
     template: "%s · NutriScope",
   },
   description:
